@@ -2,32 +2,32 @@ include Irvine32.inc ; Goi thu vien
 inputsize = 32 ; khai bao do dai dau vao
 
 .data
-count dd 0
-s db 0
+count dd 0 ; khai bao bien dem
+s db 0 ; khai bao bien de ghi so nho
 realin1 dw 0 ; do dai dau ra thuc su voi kich thuoc dword co gia tri = 0
 realin2 dw 0 ; do dai dau ra thuc su voi kich thuoc dword co gia tri = 0
 realout dd 0 ; do dai dau ra thuc su voi kich thuoc dword co gia tri = 0
-num1 dd inputsize dup(0)
+num1 dd inputsize dup(0); bien de luu du lieu nhap tu ban phim
 
 
 HandleRead HANDLE 0 ; khai bao bien kieu du lieu HANDLE(dword) co gia tri = 0
 HandleWrite HANDLE 0 ; khai bao bien kieu du lieu HANDLE(dword) co gia tri = 0
-num2 dd inputsize dup(0)
-final db inputsize dup(0)
+num2 dd inputsize dup(0) bien de luu du lieu nhap tu ban phim
+final db inputsize dup(0)bien de luu so output
 .code
 addition proc
 push ebp  ; day base pointer len stack 
 mov ebp,esp ; Truyen dia chi esp vao ebp de thuan tien cho viec pop ebp
-mov ecx,0ah
-push ecx
-xor esi,esi
-xor edi,edi
-xor ecx,ecx
-xor edx,edx
+mov ecx,0ah ;move 0ah vao ecx 
+push ecx ; day ecx len stack de lam moc
+xor esi,esi ;Xoa het du lieu
+xor edi,edi ;Xoa het du lieu
+xor ecx,ecx ;Xoa het du lieu
+xor edx,edx ;Xoa het du lieu
 
-mov si,realin1
-mov di,realin2
-sub si,3
+mov si,realin1 ; truyen do dai cua mang vao si
+mov di,realin2 ; truyen do dai cua mang vao di
+sub si,3 ;tru di 3 ( của 0dh,0ah, eax la 1 roi nen tru di 1 )
 sub di,3
 
 mov eax, [ebp + 12]
