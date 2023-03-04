@@ -13,11 +13,11 @@ byteRead dd 0 ; khai bao bien voi kich thuoc dword (32 bit) co gia tri = 0
 main proc ; bat dau
 
 invoke GetStdHandle,STD_INPUT_HANDLE ; Lay Handle input de goi ReadConsle
-mov HandleRead,eax ; Truyen ma de goi ReadConsole vao HandleRead
+mov HandleRead,eax ; Truyen Handle de goi ReadConsole vao HandleRead
 invoke GetStdHandle,STD_OUTPUT_HANDLE; Lay Handle output de goi WriteConsole
-mov HandleWrite,eax; Truyen ma de goi WriteConsole vao HandleWrite
+mov HandleWrite,eax; Truyen Handle de goi WriteConsole vao HandleWrite
 invoke ReadConsole, ; thuc hien ReadConsole
-          HandleRead, ; Lay ma xac thuc trong HandleRead de thuc hien lenh
+          HandleRead, ; Lay Handle trong HandleRead de thuc hien lenh
           ADDR str2,  ; Lay dia chi cua str2 de truyen du lieu duoc nhap tu ban phim vao
           sizeinput,  ; Kich thuoc du lieu duoc nhap vao toi da 
           ADDR byteRead,; Kich thuoc thuc su khi nhap du lieu vao
@@ -25,7 +25,7 @@ invoke ReadConsole, ; thuc hien ReadConsole
 
 
 invoke WriteConsole, ; thuc hien WriteConsole
-       HandleWrite,  ; Lay ma xac thuc trong HandleWrite de thuc hien lenh
+       HandleWrite,  ; Lay Handle trong HandleWrite de thuc hien lenh
        addr str2,    ; Lay gia tri cua str2 de in ra man hinh
        byteRead,     ; Kich thuoc du lieu duoc in ra toi da
        ADDR byteWritten, ; Kich thuoc thuc su khi in du lieu ra

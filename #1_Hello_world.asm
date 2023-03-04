@@ -12,7 +12,7 @@ invoke GetStdHandle, STD_OUTPUT_HANDLE ; Lay Handle output de goi WriteConsole (
 mov HandleWrite, eax ; Truyen ma de goi WriteConsole tu eax vao
 invoke 
      WriteConsole, ; goi WriteConsole de thuc hien output
-     HandleWrite,   ; Ma xac thuc de thuc hien lenh
+     HandleWrite,   ; Handle de thuc hien lenh
      ADDR hello,    ; Dia chi cua mang can output
      outputsize,    ; Do dai cua du lieu output
      ADDR realout,  ; Do dai thuc su cua du lieu output

@@ -38,12 +38,12 @@ uppercase endp
 main proc
 
 invoke GetStdHandle,STD_INPUT_HANDLE ; Lay Handle input de goi ReadConsole
-mov HandleRead,eax ; Truyen ma de goi ReadConsole
+mov HandleRead,eax ; Truyen Handle de goi ReadConsole
 invoke GetStdHandle,STD_OUTPUT_HANDLE ; Lay Handle output de goi WriteConsole
-mov HandleWrite, eax ; Truyen ma de goi WriteConsole
+mov HandleWrite, eax ; Truyen Handle de goi WriteConsole
 
 invoke ReadConsole, ; Goi ReadConsole de thuc hien input
-       HandleRead,  ; Ma xac thuc de thuc hien lenh
+       HandleRead,  ; Handle de thuc hien lenh
        ADDR strin,  ; Dia chi cua mang input
        inputsize,   ; Do dai cua du lieu input
        ADDR realin, ; Do dai thuc su cua du lieu input
@@ -54,7 +54,7 @@ push offset strin   ; day dia chi cua strin len stack
 call uppercase         ; goi ham
 
 invoke WriteConsole, ; Goi WriteConsole de thuc hien output
-       HandleWrite,  ; Ma xac thuc de thuc hien lenh
+       HandleWrite,  ; Handle de thuc hien lenh
        ADDR strin,   ; Dia chi cua mang can output
        realin,       ;Do dai cua du lieu output
        ADDR realout, ; Do dai thuc su cua du lieu output
