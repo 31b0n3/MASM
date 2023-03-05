@@ -12,8 +12,8 @@ num1 dd inputsize dup(0); bien de luu du lieu nhap tu ban phim
 
 HandleRead HANDLE 0 ; khai bao bien kieu du lieu HANDLE(dword) co gia tri = 0
 HandleWrite HANDLE 0 ; khai bao bien kieu du lieu HANDLE(dword) co gia tri = 0
-num2 dd inputsize dup(0) bien de luu du lieu nhap tu ban phim
-final db inputsize dup(0)bien de luu so output
+num2 dd inputsize dup(0); bien de luu du lieu nhap tu ban phim
+final db inputsize dup(0);bien de luu so output
 .code
 addition proc
 push ebp  ; day base pointer len stack 
@@ -27,8 +27,8 @@ xor edx,edx ;Xoa het du lieu
 
 mov si,realin1 ; truyen do dai cua mang vao si
 mov di,realin2 ; truyen do dai cua mang vao di
-sub si,3 ;tru di 3 ( của 0dh,0ah, eax chi vao vi tri 1 roi nen tru di 1 )
-sub di,3 ;tru di 3 ( của 0dh,0ah, ebx chi vao vi tri 1 roi nen tru di 1 )
+sub si,3 ;tru di 3 ( cua 0dh,0ah, eax chi vao vi tri 1 roi nen tru di 1 )
+sub di,3 ;tru di 3 ( cua 0dh,0ah, ebx chi vao vi tri 1 roi nen tru di 1 )
 
 mov eax, [ebp + 12] ; truyen dia chi cua num1 vao eax
 mov ebx, [ebp + 8]  ; truyen dia chi cua num2 vao ebx
@@ -58,7 +58,7 @@ E2:
 cmp di,0h ; so sanh do dai cua mang num2 voi 0
 jge E3    ; neu lon hon hoac bang thi nhay den E1
 mov dl,0h ; dl = 0 (vi khi di < 0 thi khong co gia tri)
-jmp E4    nhay den E4
+jmp E4  ;  nhay den E4
 E3:
 mov dl,BYTE PTR [ebx + edi] ; truyen gia tri cua dia chi thu edi - 1 cua num 2 vao dl
 E4:
