@@ -17,7 +17,7 @@ final db inputsize dup(0);bien de luu so output
 .code
 addition proc
 push ebp  ; day base pointer len stack 
-mov ebp,esp ; Truyen dia chi esp vao ebp de thuan tien cho viec pop ebp
+mov ebp,esp ; Khoi tao khung stack
 mov ecx,0ah ;move 0ah vao ecx 
 push ecx ; day ecx len stack de lam moc
 xor esi,esi ;Xoa het du lieu
