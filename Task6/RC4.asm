@@ -244,69 +244,6 @@ push ebp
 mov ebp,esp
 mov ebx, [ebp +8] ; input mang can chuyen
 xor ecx, ecx
-mov edx, offset lenofkey
-mov esi, DWORD PTR [edx]
-xor eax, eax
-mov eax, 2
-mul esi
-Re:
-
-cmp ecx,eax
-jz EX
-cmp BYTE PTR [ebx + ecx],3ah
-jge as
-sub BYTE PTR [ebx + ecx],30h
-inc ecx
-jmp Re
-as:
-cmp BYTE PTR [ebx + ecx],5bh
-jge Loww
-sub BYTE PTR [ebx + ecx],37h
-inc ecx
-jmp Re
-Loww:
-sub BYTE PTR [ebx + ecx],57h
-inc ecx
-jmp Re
-EX:
-
-xor ecx, ecx
-xor edx,edx
-mov esi, eax
-xor edi,edi
-CB:
-mov al, BYTE PTR [ebx + ecx]
-mov BYTE PTR [ebx + ecx],0
-mov edx,10h
-mul edx
-inc ecx
-add al, BYTE PTR [ebx + ecx]
-mov BYTE PTR [ebx + ecx],0
-
-mov BYTE PTR [ebx + edi],al
-inc edi
-inc ecx
-cmp ecx,esi
-jnz CB
-
-mov eax,edi
-mov esi,2
-div esi
-mov esi,eax
-mov eax, edi
-xor ecx,ecx
-Jss:
-dec edi
-mov dl,BYTE PTR [ebx + ecx]
-mov al, BYTE PTR [ebx + edi]
-mov BYTE PTR [ebx + ecx], al
-mov BYTE PTR [ebx + edi], dl
-inc ecx
-cmp ecx, esi
-jnz Jss
-
-
-
 xor eax,eax
 mov edx, offset lenofkey
 mov esi, DWORD PTR [edx]
@@ -344,9 +281,6 @@ mov ecx, offset lenofkey
 mov ebx, offset Realin
 mov eax, DWORD PTR[ebx]
 sub eax, 2
-xor edx, edx
-mov esi, 2
-div esi
 mov DWORD PTR [ecx], eax
 push offset key
 call atohex
