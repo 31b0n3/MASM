@@ -2,17 +2,21 @@ include Irvine32.inc
 .data
 arr db 256 dup(0) 
 task db "Enter the string to encode: "
+duty db "Enter the key: "
 len dd 0
+lenofkey dd 0
 HandleRead HANDLE 0
 HandleWrite HANDLE 0
 Realin dd 0
 Realout dd 0
 strin db 100
 .data?
+key db 256 dup(0)
 keystream db 256 dup(0)
 result db 256 dup(0)
 result1 db 256 dup(0)
 .code
+
 Sbox proc
 push ebp
 mov ebp,esp
@@ -24,24 +28,6 @@ mov BYTE PTR [eax + ecx], cl
 inc ecx
 cmp ecx, 100h
 jnz L1
-
-mov ebx, offset arr
-xor ecx,ecx
-mov esi, 100h
-L2:
-xor edx,edx
-add al, BYTE PTR [ebx + ecx]
-xor al, 04ch
-idiv esi
-mov edi,edx
-mov dl, BYTE PTR[ebx + edi ]
-mov al, BYTE PTR[ebx + ecx]
-mov BYTE PTR[ebx + edi], al
-mov BYTE PTR [ebx + ecx], dl
-mov eax,edi
-inc ecx
-cmp ecx, 100h
-jnz L2
 
 mov esp,ebp
 pop ebp
@@ -74,39 +60,80 @@ Creatkeystream proc
 push ebp
 mov ebp,esp
 
-mov ebx, offset arr
-xor ecx,ecx
-xor edi,edi
-
+xor ecx, ecx
+xor eax, eax
 L5:
-mov esi, 100h
-xor edx,edx
-mov eax,edi
-add al, 61h		
-div esi
-mov edi,edx
-mov dl, BYTE PTR[ebx + edi ] ; dl =  arr[(al + 61h) %256]
-mov al,dl
-add al,cl
-xor edx,edx
-div esi
-mov al, BYTE PTR[ebx + edx] ; al = arr[(dl +cl) %256]
-mov esi, edx
-mov dl, BYTE PTR[ebx + edi ]
-mov BYTE PTR[ebx + edi], al
-mov BYTE PTR [ebx + esi], dl
-add al,dl
-xor edx,edx
-mov esi,100h
-div esi
-mov esi, offset keystream
-mov BYTE PTR[esi + ecx], dl
-mov esi, [ebp + 8]
-mov edx, DWORD PTR [esi]
+mov esi, offset arr
+mov edi, offset key
+xor ebx,ebx
+mov bl, BYTE PTR [esi + ecx]
+add eax,ebx
+xor ebx,ebx
+mov bl, BYTE PTR [edi + ecx]
+add eax,ebx
+mov edi,100h
+xor edx, edx
+div edi
+mov eax, edx
+mov dl, BYTE PTR [esi + eax]
+mov bl, BYTE PTR [esi + ecx]
+mov BYTE PTR [esi + eax],bl
+mov BYTE PTR [esi + ecx],dl
 inc ecx
-cmp ecx, edx
+cmp ecx, 100h
 jnz L5
 
+
+xor eax,eax
+xor edi,edi
+xor ecx,ecx
+ROO:
+mov esi, offset arr
+inc eax
+mov ebx,100h
+xor edx,edx
+div ebx ; v10 = edx
+mov eax,edi
+xor ebx,ebx
+mov bl, BYTE PTR [esi + edx]
+add eax, ebx
+mov ebx, 100h
+mov edi,edx
+xor edx,edx
+div ebx ; v13 = edx 
+mov eax, edi
+mov edi, edx
+
+xor ebx,ebx
+xor edx,edx
+mov bl, BYTE PTR [esi + eax]
+mov dl, BYTE PTR [esi + edi]
+
+mov BYTE PTR [esi + eax], dl
+mov BYTE PTR [esi + edi], bl
+
+add ebx,edx
+mov esi,eax
+mov eax,ebx
+mov ebx,100h
+xor edx,edx
+div ebx ; v8 = edx
+mov eax,esi
+mov esi , offset arr
+mov bl , BYTE PTR [esi + edx]
+mov esi , offset keystream
+mov BYTE PTR [esi + ecx], bl
+
+mov esi, [ebp + 8]
+mov ebx, DWORD PTR [esi]
+inc ecx
+cmp ecx, ebx
+jnz ROO
+
+
+
+
+mov esi , offset keystream
 mov esp,ebp
 pop ebp
 ret
@@ -167,7 +194,10 @@ mov BYTE PTR [edi + esi] ,dl
 add esi,2
 jmp LOUT
 LOO:
+
 mov edi, [ebp + 12] ; result1
+mov BYTE PTR [edi + esi] ,al
+inc esi
 mov BYTE PTR [edi + esi] ,dl
 inc esi
 LOUT:
@@ -208,6 +238,97 @@ mov esp,ebp
 pop ebp
 ret
 hextoa endp
+
+atohex proc
+push ebp
+mov ebp,esp
+mov ebx, [ebp +8] ; input mang can chuyen
+xor ecx, ecx
+mov edx, offset lenofkey
+mov esi, DWORD PTR [edx]
+xor eax, eax
+mov eax, 2
+mul esi
+Re:
+
+cmp ecx,eax
+jz EX
+cmp BYTE PTR [ebx + ecx],3ah
+jge as
+sub BYTE PTR [ebx + ecx],30h
+inc ecx
+jmp Re
+as:
+cmp BYTE PTR [ebx + ecx],5bh
+jge Loww
+sub BYTE PTR [ebx + ecx],37h
+inc ecx
+jmp Re
+Loww:
+sub BYTE PTR [ebx + ecx],57h
+inc ecx
+jmp Re
+EX:
+
+xor ecx, ecx
+xor edx,edx
+mov esi, eax
+xor edi,edi
+CB:
+mov al, BYTE PTR [ebx + ecx]
+mov BYTE PTR [ebx + ecx],0
+mov edx,10h
+mul edx
+inc ecx
+add al, BYTE PTR [ebx + ecx]
+mov BYTE PTR [ebx + ecx],0
+
+mov BYTE PTR [ebx + edi],al
+inc edi
+inc ecx
+cmp ecx,esi
+jnz CB
+
+mov eax,edi
+mov esi,2
+div esi
+mov esi,eax
+mov eax, edi
+xor ecx,ecx
+Jss:
+dec edi
+mov dl,BYTE PTR [ebx + ecx]
+mov al, BYTE PTR [ebx + edi]
+mov BYTE PTR [ebx + ecx], al
+mov BYTE PTR [ebx + edi], dl
+inc ecx
+cmp ecx, esi
+jnz Jss
+
+
+
+xor eax,eax
+mov edx, offset lenofkey
+mov esi, DWORD PTR [edx]
+mov edi,esi
+MBB:
+
+xor edx,edx
+div edi
+mov eax,edx
+mov cl, BYTE PTR [ebx + eax]
+mov BYTE PTR [ebx + esi], cl
+inc esi
+inc eax
+cmp esi,100h
+jnz MBB
+
+
+mov esp,ebp
+pop ebp
+ret
+atohex endp
+
 main proc
 invoke GetStdHandle,STD_INPUT_HANDLE 
 mov HandleRead,eax 
@@ -216,11 +337,25 @@ mov HandleWrite, eax
 invoke WriteConsole, HandleWrite, ADDR task, 28, ADDR Realout,0
 invoke ReadConsole, HandleRead, ADDR strin, 100, ADDR Realin, 0
 
+invoke WriteConsole, HandleWrite, ADDR duty, 15, ADDR Realout,0
+invoke ReadConsole, HandleRead, ADDR key, 256, ADDR Realin, 0
+
+mov ecx, offset lenofkey
+mov ebx, offset Realin
+mov eax, DWORD PTR[ebx]
+sub eax, 2
+xor edx, edx
+mov esi, 2
+div esi
+mov DWORD PTR [ecx], eax
+push offset key
+call atohex
 
 call Sbox
 push offset len
 push offset strin
 call strlen
+
 push offset len
 call Creatkeystream
 
